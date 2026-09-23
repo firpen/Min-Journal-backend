@@ -2,6 +2,7 @@ package com.minjournal.min_journal_backend.models;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +19,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(length = 1000)
     private String note;
 
     @Enumerated(EnumType.STRING)
@@ -28,6 +30,13 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Note(String note, Status status, LocalDateTime date, User user) {
+        this.note = note;
+        this.status = status;
+        this.date = date;
+        this.user = user;
+    }
 
     public int getId() {
         return id;
