@@ -21,6 +21,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
+    @ExceptionHandler(UserNoteDoesntExistException.class)
+    public ResponseEntity<String> handleUserNoteDoesntExist(UserNoteDoesntExistException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     // Fångar upp MethodArgumentNotValidExceptions som kastas av @Valid på mina controllermetoder.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException e) {
