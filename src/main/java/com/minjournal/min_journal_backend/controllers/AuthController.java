@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.minjournal.min_journal_backend.dtos.LoginDto;
 import com.minjournal.min_journal_backend.dtos.RegisterDto;
+import com.minjournal.min_journal_backend.dtos.UserDto;
 import com.minjournal.min_journal_backend.models.User;
 import com.minjournal.min_journal_backend.services.AuthService;
 
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.security.core.Authentication;
@@ -68,9 +70,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> logout(Authentication authentication, HttpServletRequest request,
+            HttpServletResponse response) {
         this.securityContextLogoutHandler.logout(request, response, authentication);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserDto> user(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UserDto userDto = new UserDto();
+        userDto.setUsername(authentication.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
 }
