@@ -38,6 +38,8 @@ public class Note {
         this.user = user;
     }
 
+    public Note() {}
+
     public int getId() {
         return id;
     }
