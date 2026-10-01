@@ -52,8 +52,9 @@ public class AuthController {
     public ResponseEntity<Void> login(@RequestBody LoginDto login, HttpServletRequest request,
             HttpServletResponse response) {
         User user = authService.login(login.getUsername(), login.getPassword());
-        // Skapar ett Authentication-objekt i minnet som innehåller username, null och
-        // en tom lista.
+        // Skapar ett Authentication-objekt i minnet som innehåller username, null (lösenord) och
+        // en tom lista (roles). Eftersom jag redan verifierat lösenordet i AuthService behövs inte
+        // lösenordet sparas i sessionen. Jag har inga roles i min applikation därför är listan tom.
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, List.of());
         // Skapar en tom behållare av typen SecurityContext
         SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -61,9 +62,8 @@ public class AuthController {
         context.setAuthentication(authentication);
         /*
          * Skapar en session på servern om det inte redan fanns en och lägger
-         * SecurityContext-behållaren
-         * i sessionen på servern, slumpar ett ID och lägger Set-Cookie: JSESSIONID=...
-         * i responsen.
+         * SecurityContext-behållaren i sessionen på servern, slumpar ett ID och lägger
+         * Set-Cookie: JSESSIONID=... i responsen.
          */
         securityContextRepository.saveContext(context, request, response);
         return ResponseEntity.status(HttpStatus.OK).build();

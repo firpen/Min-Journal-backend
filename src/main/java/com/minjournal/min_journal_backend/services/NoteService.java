@@ -76,14 +76,18 @@ public class NoteService {
     public Map<Status, Double> getStatistics(String username, LocalDateTime start, LocalDateTime end) {
         List<Note> notes = noteRepository.findByUserUsernameAndDateBetween(username, start, end);
         Map<Status, Integer> counts = new HashMap<>();
-        // counts.get() används för att hämta ett värde med hjälp av nyckeln
         for (Note note : notes) {
-            counts.put(note.getStatus(), counts.getOrDefault(note.getStatus(), 0) + 1 );
+            if (counts.get(note.getStatus()) == null) {
+                counts.put(note.getStatus(), 1);
+            }
+            else {
+                counts.put(note.getStatus(), counts.get(note.getStatus()) + 1);  
+            }
         }
         Map<Status, Double> percentages = new HashMap<>();
         for (Status s : Status.values()) {
-            double percent = notes.isEmpty() ? 0 : (counts.getOrDefault(s, 0) * 100.0) / notes.size();
-            percentages.put(s, percent);
+            double percent = counts.get(s) == null ? 0 : counts.get(s) * 100.0 / notes.size(); 
+            percentages.put(s, percent); 
         }
         return percentages;
     }

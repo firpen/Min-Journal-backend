@@ -1,6 +1,5 @@
 package com.minjournal.min_journal_backend.configuration;
 
-import com.minjournal.min_journal_backend.controllers.AuthController;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
